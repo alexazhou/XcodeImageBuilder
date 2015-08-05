@@ -12,7 +12,7 @@ import os.path
 
 def resize_img(name, output_name):
 
-    print("resize: %s"%name)
+    print("resize: %s -> output_name%s"%(name,output_name))
 
     output_name_tail = output_name[ output_name.rfind(".") : ]
     img_3x_name = output_name.replace(output_name_tail,"@3x" + output_name_tail)
