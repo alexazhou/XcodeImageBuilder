@@ -8,6 +8,7 @@
 import os
 import os.path
 import resize
+import sys
 from mod_pbxproj import XcodeProject
 
 
@@ -18,7 +19,7 @@ project_file = "lcf-newproject.xcodeproj/project.pbxproj"
 xcode_group = "lcf-newproject/Supporting Files/AutoBuildImages"
 
 def resize_img_in_path(input_path, output_path):
-	
+    
     for parent,dirnames,filenames in os.walk(input_path):
 
         output_parent = output_base_dir + parent[len(input_base_dir):]
@@ -48,6 +49,7 @@ def xcode_get_or_create_group_by_path( project_obj, xcode_path):
 def xcode_project_sync(file_path, xcode_group):
 
     project_obj = XcodeProject.Load(project_file)
+    modifyed = False
     
     for parent,dirnames,filenames in os.walk(file_path):
 
@@ -60,17 +62,26 @@ def xcode_project_sync(file_path, xcode_group):
 
             name = (parent+os.sep+f).decode("utf-8")
 
-            if len(project_obj.get_files_by_name(f, parent = group)) == 0:
-                print("sync file to Xcode Group:%s"%name)
+            if len(project_obj.get_files_by_name(f.decode("utf-8"), parent = group)) == 0:
+                modifyed = True
+                print("sync file to Xcode Group:%s"%name.encode("utf-8"))
                 project_obj.add_file( name , parent = group )
 
-    project_obj.save()
+    if modifyed:
+        project_obj.save()
+        return True
+    else:
+        return False
 
 
 def main():
     
     resize_img_in_path( input_base_dir, output_base_dir )
-    xcode_project_sync(output_base_dir, xcode_group)
+    project_modifyed = xcode_project_sync(output_base_dir, xcode_group)
+
+    if project_modifyed:
+        print("images synced to xcode group, please build again")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
