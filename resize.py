@@ -7,22 +7,31 @@
 
 from PIL import Image
 import sys
+import os.path
 
 
 def resize_img(name, output_name):
 
     print("resize: %s"%name)
+
+    output_name_tail = output_name[ output_name.rfind(".") : ]
+    img_3x_name = output_name.replace(output_name_tail,"@3x" + output_name_tail)
+    img_2x_name = output_name.replace(output_name_tail,"@2x" + output_name_tail)
+    img_1x_name = output_name
+
+    if os.path.exists( img_3x_name ) and os.path.exists( img_2x_name ) and os.path.exists( img_1x_name ):
+        print("resized image already existed")
+        return
+
     img_6x = Image.open( name )
 
     img_3x = img_6x.resize(( int(img_6x.size[0]/2),int(img_6x.size[1]/2) ), Image.BICUBIC)
     img_2x = img_6x.resize(( int(img_6x.size[0]/3),int(img_6x.size[1]/3) ), Image.BICUBIC)
     img_1x = img_6x.resize(( int(img_6x.size[0]/6),int(img_6x.size[1]/6) ), Image.BICUBIC)
 
-    output_name_tail = output_name[ output_name.rfind(".") : ]
-
-    img_3x.save( output_name.replace(output_name_tail,"@3x" + output_name_tail) )
-    img_2x.save( output_name.replace(output_name_tail,"@2x" + output_name_tail) )
-    img_1x.save( output_name )
+    img_3x.save( img_3x_name )
+    img_2x.save( img_2x_name )
+    img_1x.save( img_1x_name )
 
 
 def show_help():
