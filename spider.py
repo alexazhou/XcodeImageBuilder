@@ -16,8 +16,8 @@ from mod_pbxproj import XcodeProject
 input_base_dir = "ImageBuilderResources"
 output_base_dir = "XcodeImageOutputs"
 
-project_file = "lcf-newproject.xcodeproj/project.pbxproj"
-xcode_group = "lcf-newproject/Supporting Files/AutoBuildImages"
+project_file = ""
+xcode_group = ""
 
 def resize_img_in_path(input_path, output_path):
     
@@ -48,6 +48,10 @@ def xcode_get_or_create_group_by_path( project_obj, xcode_path):
 
 
 def xcode_project_sync(file_path, xcode_group):
+
+    if xcode_group == "":
+        print("INFO: not specify xcode group, so ignore sync imgs to Xcode project")
+        return False
 
     project_obj = XcodeProject.Load(project_file)
     modifyed = False
@@ -92,7 +96,7 @@ def main():
         elif option == "-p":
             project_file = value
         elif option == "-h" or option == "--help":
-            print("use: spider -i [image input path] -o [image output path] -g [Xcode group] -p [Xcode .pbxproj file path]")
+            print("use: spider.py -i [image input path] -o [image output path] -g [Xcode group] -p [Xcode .pbxproj file path]")
             sys.exit(1)
 
     resize_img_in_path( input_base_dir, output_base_dir )
