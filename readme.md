@@ -12,12 +12,12 @@ XcodeImageBuilder是一个由@6x图片自动生成@3x @2x @1x图片的工具。
 * 和Xcode无缝集成
 
 ###依赖
-XcodeImageBuilder用到了python2，并使用了pillow来处理图片，以及mod_pbxproj来对Xcode工程进行读写
+XcodeImageBuilder用到了python2，并使用了pillow来处理图片，mod_pbxproj来对Xcode工程进行读写，以及xcproj来保持Xcode工程文件格式。
 
 请通过以下命令进行安装:  
 **pip install pillow**  
-**pip install mod_pbxproj**
-
+**pip install mod_pbxproj**  
+**brew install xcproj**
 ###使用方法
 
 命令行方式调用：

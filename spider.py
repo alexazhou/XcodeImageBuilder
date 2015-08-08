@@ -73,7 +73,15 @@ def xcode_project_sync(file_path, xcode_group):
                 project_obj.add_file( name , parent = group )
 
     if modifyed:
+        print("now save project file")
         project_obj.save()
+        print("success!\nAnd now use xcproj to retouch project, make it what it was")
+        retouch_ret = os.system('xcproj -p "%s" touch'%project_file)
+        if retouch_ret == 0:
+            print("success!")
+        else:
+            print("please make sure xcproj tool installed. xcproj can make .pbxproj file look pretty")
+
         return True
     else:
         return False
