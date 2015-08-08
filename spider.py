@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Date    : 2015-08-04 23:44:38
 # @Author  : Alexa (AlexaZhou@163.com)
@@ -9,6 +9,7 @@ import os
 import os.path
 import resize
 import sys
+import getopt
 from mod_pbxproj import XcodeProject
 
 
@@ -75,7 +76,25 @@ def xcode_project_sync(file_path, xcode_group):
 
 
 def main():
-    
+    global input_base_dir, output_base_dir, project_file, xcode_group
+
+    opts, args = getopt.getopt(sys.argv[1:], 'hi:o:g:p:', ["help"]) 
+
+    for option, value in opts: 
+        #print("option:%s --> value:%s"%(option, value))
+
+        if option == "-i":
+            input_base_dir = value
+        elif option == "-o":
+            output_base_dir = value
+        elif option == "-g":
+            xcode_group = value
+        elif option == "-p":
+            project_file = value
+        elif option == "-h" or option == "--help":
+            print("use: spider -i [image input path] -o [image output path] -g [Xcode group] -p [Xcode .pbxproj file path]")
+            sys.exit(1)
+
     resize_img_in_path( input_base_dir, output_base_dir )
     project_modifyed = xcode_project_sync(output_base_dir, xcode_group)
 
