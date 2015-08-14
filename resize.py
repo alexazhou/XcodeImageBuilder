@@ -23,11 +23,17 @@ def resize_img(name, output_name):
         print("resized image already existed")
         return
 
-    img_6x = Image.open( name )
+    img_big = Image.open( name )
+    if "@3x" in name:
+        multiple = 1
+    elif "@6x" in name:
+        multiple = 2    
+    else:
+        raise Exception("Must input a @6x or @3x file name")
 
-    img_3x = img_6x.resize(( int(img_6x.size[0]/2),int(img_6x.size[1]/2) ), Image.BICUBIC)
-    img_2x = img_6x.resize(( int(img_6x.size[0]/3),int(img_6x.size[1]/3) ), Image.BICUBIC)
-    img_1x = img_6x.resize(( int(img_6x.size[0]/6),int(img_6x.size[1]/6) ), Image.BICUBIC)
+    img_3x = img_big.resize(( int(img_big.size[0]/(multiple)),int(img_big.size[1]/(multiple)) ), Image.BICUBIC)
+    img_2x = img_big.resize(( int(img_big.size[0]/(1.5*multiple)),int(img_big.size[1]/(1.5*multiple)) ), Image.BICUBIC)
+    img_1x = img_big.resize(( int(img_big.size[0]/(3*multiple)),int(img_big.size[1]/(3*multiple)) ), Image.BICUBIC)
 
     img_3x.save( img_3x_name )
     img_2x.save( img_2x_name )
@@ -55,7 +61,7 @@ def main():
 
     items = sys.argv[2:]
     for name in items:
-        resize_img( name, name.replace("@6x",""))
+        resize_img( name, name.replace("@6x","").replace("@3x",""))
 
 
 

@@ -32,7 +32,10 @@ def resize_img_in_path(input_path, output_path):
             if f.startswith("."):
                 continue
 
-            resize.resize_img( parent+os.sep+f, (output_parent+os.sep+f).replace("@6x","") )
+            if "@3x" not in f and "@6x" not in f:
+                continue
+
+            resize.resize_img( parent+os.sep+f, (output_parent+os.sep+f).replace("@6x","").replace("@3x","") )
 
 
 def xcode_get_or_create_group_by_path( project_obj, xcode_path):
