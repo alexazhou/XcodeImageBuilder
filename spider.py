@@ -14,7 +14,7 @@ from mod_pbxproj import XcodeProject
 
 
 input_base_dir = "ImageBuilderResources"
-output_base_dir = "XcodeImageOutputs"
+output_base_dir = "XcodeImageOutput"
 
 project_file = ""
 xcode_group = ""
@@ -56,6 +56,13 @@ def xcode_project_sync(file_path, xcode_group):
         print("INFO: not specify xcode group, so ignore sync imgs to Xcode project")
         return False
 
+    ret = os.system("xcproj -h")
+    print("ret",ret)
+
+    if ret != 0:
+        print("please make sure xcproj tool installed. xcproj can make .pbxproj file look pretty")
+        return False
+
     project_obj = XcodeProject.Load(project_file)
     modifyed = False
     
@@ -79,11 +86,12 @@ def xcode_project_sync(file_path, xcode_group):
         print("now save project file")
         project_obj.save()
         print("success!\nAnd now use xcproj to retouch project, make it what it was")
+
         retouch_ret = os.system('xcproj -p "%s" touch'%project_file)
         if retouch_ret == 0:
             print("success!")
         else:
-            print("please make sure xcproj tool installed. xcproj can make .pbxproj file look pretty")
+            print("some thing was error, call xproj failed.")
 
         return True
     else:
